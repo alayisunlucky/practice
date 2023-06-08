@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string vigenere_encrypt(const string& plaintext, const string& key) {
+    string ciphertext;
+    int key_length = key.length();
+    int plaintext_length = plaintext.length();
+    for (int i = 0; i < plaintext_length; i++) {
+        char plaintext_char = plaintext[i];
+        if (isalpha(plaintext_char)) {
+            char key_char = key[i % key_length];
+            int shift = toupper(key_char) - 'A';
+            char base = islower(plaintext_char) ? 'a' : 'A';
+            char encrypted_char = ((plaintext_char - base + shift) % 26) + base;
+            ciphertext += encrypted_char;
+        } else {
+            ciphertext += plaintext_char;
+        }
+    }
+    return ciphertext;
+}
+
+string vigenere_decrypt(const string& ciphertext, const string& key) {
+    string plaintext;
+    int key_length = key.length();
+    int ciphertext_length = ciphertext.length();
+    for (int i = 0; i < ciphertext_length; i++) {
+        char ciphertext_char = ciphertext[i];
+        if (isalpha(ciphertext_char)) {
+            char key_char = key[i % key_length];
+            int shift = toupper(key_char) - 'A';
+            char base = islower(ciphertext_char) ? 'a' : 'A';
+            char decrypted_char = ((ciphertext_char - base - shift + 26) % 26) + base;
+            plaintext += decrypted_char;
+        } else {
+            plaintext += ciphertext_char;
+        }
+    }
+    return plaintext;
+}
+
+int main() {
+    string plaintext;
+    string key;
+
+    cout << "Введите текст для шифрования: ";
+    getline(cin, plaintext);
+
+    cout << "Введите ключ: ";
+    getline(cin, key);
+    cout << endl;
+    string encrypted_text = vigenere_encrypt(plaintext, key);
+    cout << encrypted_text << endl;
+
+    string decrypted_text = vigenere_decrypt(encrypted_text, key);
+    cout << decrypted_text << endl;
+
+    return 0;
+}
